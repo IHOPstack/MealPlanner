@@ -1,26 +1,35 @@
 import random
 
-# Sample dish data
-
-def generate_meal_plan(num_meals, dishes, favor_health_factors=None, favor_ingredients=None, must_cook=None):
+def generate_meal_plan(num_meals, recipes, favor_health_factors=None, favor_ingredients=None, must_cook=None):
     meal_plan = {}
-    
+
     # If a specific dish or meal needs to be cooked, add it to the meal plan
     if must_cook:
-        meal_plan[1] = next(dish for dish in dishes if dish.name == must_cook)
-        num_meals -= 1
-    
-    # If health factors or ingredients are preferred, sort the dishes accordingly
-    if favor_health_factors:
-        dishes.sort(key=lambda x: sum(1 for factor in favor_health_factors if factor in x.health_factors), reverse=True)
-    if favor_ingredients:
-        dishes.sort(key=lambda x: sum(1 for ingredient in favor_ingredients if ingredient in x.ingredients), reverse=True)
-    
-    # Randomly select dishes to add to the meal plan
-    for i in range(2, num_meals + 2):
-        meal_plan[i] = random.choice(dishes)
-    
-    print(meal_plan)
-    return meal_plan
+        matching_recipes = [recipe for recipe in recipes if recipe.name.lower() == must_cook.lower()]
+        if matching_recipes:
+            meal_plan[1] = matching_recipes[0]
+            num_meals -= 1
+        else:
+            print(f"No recipe found for '{must_cook}'. Skipping it.")
 
-# Example usage
+    # Calculate scores for each recipe based on favored health factors and ingredients
+    for recipe in recipes:
+        recipe.score = 0
+        if favor_health_factors:
+            recipe.score += sum(1 for factor in favor_health_factors if factor in recipe.health_factors)
+        if favor_ingredients:
+            recipe.score += sum(1 for ingredient in favor_ingredients if ingredient in recipe.ingredients)
+
+    # Sort recipes based on scores in descending order
+    sorted_recipes = sorted(recipes, key=lambda x: x.score, reverse=True)
+
+    # Randomly select recipes with higher scores to add to the meal plan
+    for i in range(2, num_meals + 2):
+        if sorted_recipes:
+            recipe = random.choices(sorted_recipes, weights=[r.score for r in sorted_recipes])[0]
+            meal_plan[i] = recipe
+            sorted_recipes.remove(recipe)
+        else:
+            break
+
+    return meal_plan
