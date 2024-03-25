@@ -1,18 +1,11 @@
 from google.oauth2.service_account import Credentials as ServiceAccountCredentials
 from googleapiclient.discovery import build
 from recipe import Recipe
-import Hueristic
 
-# Replace with the path to your JSON key file
 KEY_FILE = 'Skeleton_closet/winter-cocoa-418006-70f14d7c8e87.json'
-
-# Replace with the ID of your Google Sheet
 SHEET_ID = '1ZANX4fge4qNNlXchirwgIaCUeLrIuNXU-t3VpvT1C80'
-
-# Replace with the name of the sheet within your Google Sheet
 SHEET_NAME = 'recipes'
-
-# Replace with the range of cells containing your data
+KEEP_ID = '19CJDWVk1Tq7gNxpzfQAWLliIzrD-DPbfhCzfmNQeeJywNuj8lwIt-mKi0hWnT--E7NTV'
 RANGE = 'A1:Z100'  # Adjust the range as needed
 
 def get_recipe_data():
@@ -124,3 +117,23 @@ def update_meal_plan_sheet(meal_plan):
     ).execute()
 
     return(True)
+
+def update_grocery_note(groceries):
+    # Load credentials from the service account JSON key file
+    creds = ServiceAccountCredentials.from_service_account_file(KEY_FILE, scopes=['https://www.googleapis.com/auth/keep'])
+    
+    # Establish connection with Keep API
+    keep_service = build('keep', 'v1', credentials=creds)
+
+    text = ''
+    for location, ingredients in groceries.items():
+        text += f"{location}:\n"
+        for ingredient in ingredients:
+            text += f"- [ ] {ingredient}\n"
+        text += "\n"
+
+    note_name = f'notes/{KEEP_ID}'
+    note = keep_service.notes().get(name=note_name).execute()
+    note['textContent'] = text
+    updated_note = keep_service.notes().update(name=note_name, body=note).execute()
+    print(f"Note updated: {updated_note['title']}")
