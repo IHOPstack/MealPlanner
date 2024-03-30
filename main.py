@@ -21,7 +21,7 @@ def main():
     # Create grocery list
     groceries = convert_plan_2_groceries(meal_plan)
 
-    # Update grocery list to Keep
+    # Push grocery list to Keep
     update_grocery_note(groceries)
 
 

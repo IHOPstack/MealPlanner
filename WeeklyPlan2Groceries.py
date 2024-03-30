@@ -25,18 +25,17 @@ def convert_plan_2_groceries(menu):
 
     # Iterate over each day in the menu
     for day, recipe in menu.items():
-        if hasattr(recipe, 'ingredients'):
-            # Iterate over each ingredient in the meal
-            for ingredient in recipe.ingredients:
-                # Get the store location of the ingredient
-                location = store_locations.get(ingredient, 'other')
+        # Iterate over each ingredient in the meal
+        for ingredient in recipe.ingredients:
+            # Get the store location of the ingredient
+            location = store_locations.get(ingredient, 'other')
 
-                # If the location is not already in the store_organized_list dictionary, add it
-                if location not in store_organized_list:
-                    store_organized_list[location] = []
+            # If the location is not already in the store_organized_list dictionary, add it
+            if location not in store_organized_list:
+                store_organized_list[location] = []
 
-                # Add the ingredient to the list of items at the store location
-                store_organized_list[location].append(ingredient)
+            # Add the ingredient to the list of items at the store location
+            store_organized_list[location].append(ingredient)
 
     # Print the store_organized_list dictionary
     for location, ingredients in store_organized_list.items():
