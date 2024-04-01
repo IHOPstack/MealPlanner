@@ -1,35 +1,29 @@
 import random
 
-def generate_meal_plan(num_meals, recipes, favor_health_factors=None, favor_ingredients=None, must_cook=None):
-    meal_plan = {}
+def generate_meal_plan(num_meals, recipes, health_preferences=None, ingredient_preferences=None, must_cook=None):
+    meal_plan = []
+    dish_options = []
 
-    # If a specific dish or meal needs to be cooked, add it to the meal plan
-    if must_cook:
-        matching_recipes = [recipe for recipe in recipes if recipe.name.lower() == must_cook.lower()]
-        if matching_recipes:
-            meal_plan[1] = matching_recipes[0]
-            num_meals -= 1
-        else:
-            print(f"No recipe found for '{must_cook}'. Skipping it.")
-
-    # Calculate scores for each recipe based on favored health factors and ingredients
+    # Filter out must cook meals, and side dishes
     for recipe in recipes:
-        recipe.score = 0
-        if favor_health_factors:
-            recipe.score += sum(1 for factor in favor_health_factors if factor in recipe.health_factors)
-        if favor_ingredients:
-            recipe.score += sum(1 for ingredient in favor_ingredients if ingredient in recipe.ingredients)
+        if recipe.type == 'main':
+            if recipe.name in must_cook:
+                meal_plan.append(recipe)
+                num_meals -= 1
+            else:
+                dish_options.append(recipe)
+    # Sort dishes by their usage of preferred health factors
+    healthiest_options = sorted(dish_options, key=lambda x: len(set(x.health_factors).intersection(set(health_preferences))))
+    # Sort dishes by their ability to minimize groceries 
+    needed_ingredients = set([tuple(dish.ingredients) for dish in meal_plan]) | set(ingredient_preferences)
+    dishes_sorted_by_ingredients = sorted(dish_options, key=lambda x: len(set(x.ingredients) - needed_ingredients), reverse=True)
+    # Sort dishes by the combined metrics of previous sorting
+    balanced_dishes = sorted(dish_options, key=lambda x: dishes_sorted_by_ingredients.index(x) + healthiest_options.index(x))
 
-    # Sort recipes based on scores in descending order
-    sorted_recipes = sorted(recipes, key=lambda x: x.score, reverse=True)
-
-    # Randomly select recipes with higher scores to add to the meal plan
-    for i in range(2, num_meals + 2):
-        if sorted_recipes:
-            recipe = random.choices(sorted_recipes, weights=[r.score for r in sorted_recipes])[0]
-            meal_plan[i] = recipe
-            sorted_recipes.remove(recipe)
-        else:
-            break
+    # Add recipes to meal plan
+    for i in range(num_meals):
+        dish = balanced_dishes[-1-i]
+        meal_plan.append(dish)
+        dishes_sorted_by_ingredients.remove(dish)
 
     return meal_plan

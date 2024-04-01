@@ -10,9 +10,9 @@ def main():
     meal_plan = generate_meal_plan(
         7,
         recipes,
-        favor_health_factors=['high protein'],
-        favor_ingredients=['pasta'],
-        must_cook='Spaghetti'
+        health_preferences=['high protein'],
+        ingredient_preferences=['tomato paste'],
+        must_cook=['Spaghetti']
     )
 
     # Update the meal plan sheet

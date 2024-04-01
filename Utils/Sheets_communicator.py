@@ -25,9 +25,9 @@ def get_recipe_data():
     for row in data[1:]:  # Skip the header row
         if row[7] == 'TRUE':
             recipe = Recipe(
-                name=row[1],
-                ingredients=row[2].split(', '),
-                health_factors= row[3],
+                name= row[1],
+                ingredients= row[2].split(', '),
+                health_factors= list(row[3]),
                 type= row[4],
                 cook_time= int(row[5]),
                 cuisine= row[6]
@@ -51,7 +51,7 @@ def update_meal_plan_sheet(meal_plan):
     range_name = f"{sheet_name}!B2"
 
     #Convert meal_plan dictionary to a 2D list
-    meal_plan = [['Day', 'Recipe'], *[[day, recipe.name] for day, recipe in meal_plan.items()]]
+    meal_plan = [['Day', 'Recipe'], *[[day + 1, recipe.name] for day, recipe in enumerate(meal_plan)]]
 
     # Write the meal plan data to the sheet
     print(meal_plan)

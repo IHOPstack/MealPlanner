@@ -24,8 +24,9 @@ def convert_plan_2_groceries(menu):
     store_organized_list = {}
 
     # Iterate over each day in the menu
-    for day, recipe in menu.items():
+    for recipe in menu:
         # Iterate over each ingredient in the meal
+        print(recipe.ingredients)
         for ingredient in recipe.ingredients:
             # Get the store location of the ingredient
             location = store_locations.get(ingredient, 'other')
