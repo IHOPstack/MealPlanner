@@ -11,8 +11,8 @@ def main():
         7,
         recipes,
         health_preferences=['high protein'],
-        ingredient_preferences=['tomato paste'],
-        must_cook=['Spaghetti']
+        ingredient_preferences=['brussel sprouts'],
+        must_cook=['Arrabiata']
     )
 
     # Update the meal plan sheet

@@ -8,6 +8,53 @@ SHEET_NAME = 'recipes'
 KEEP_ID = '19CJDWVk1Tq7gNxpzfQAWLliIzrD-DPbfhCzfmNQeeJywNuj8lwIt-mKi0hWnT--E7NTV'
 RANGE = 'A1:Z100'  # Adjust the range as needed
 
+from sqlalchemy.orm import sessionmaker
+from database import Recipe, Ingredient, RecipeIngredient, engine
+
+def import_data_from_sheets():
+    # Load credentials and create a connection to the Google Sheets API
+    creds = ServiceAccountCredentials.from_service_account_file(KEY_FILE, scopes=['https://www.googleapis.com/auth/spreadsheets'])
+    sheets_service = build('sheets', 'v4', credentials=creds)
+
+    # Retrieve the data from your Google Sheets
+    result = sheets_service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=RANGE).execute()
+    data = result.get('values', [])
+
+    # Create a session to interact with the database
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    # Process the data and populate the database tables
+    for row in data[1:]:  # Skip the header row
+        recipe_name = row[0]
+        ingredient_names = row[1].split(', ')
+        # Extract other relevant data from the row
+
+        # Create or retrieve the recipe
+        recipe = session.query(Recipe).filter_by(name=recipe_name).first()
+        if not recipe:
+            recipe = Recipe(name=recipe_name)
+            session.add(recipe)
+
+        # Create or retrieve the ingredients and associate them with the recipe
+        for ingredient_name in ingredient_names:
+            ingredient = session.query(Ingredient).filter_by(name=ingredient_name).first()
+            if not ingredient:
+                ingredient = Ingredient(name=ingredient_name)
+                session.add(ingredient)
+
+            recipe_ingredient = RecipeIngredient(recipe=recipe, ingredient=ingredient)
+            session.add(recipe_ingredient)
+
+    # Commit the changes to the database
+    session.commit()
+
+if __name__ == '__main__':
+    import_data_from_sheets()
+
+
+
+
 def get_recipe_data():
     # Load credentials from the service account JSON key file
     creds = ServiceAccountCredentials.from_service_account_file(KEY_FILE, scopes=['https://www.googleapis.com/auth/spreadsheets'])

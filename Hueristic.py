@@ -1,5 +1,3 @@
-import random
-
 def generate_meal_plan(num_meals, recipes, health_preferences=None, ingredient_preferences=None, must_cook=None):
     meal_plan = []
     dish_options = []
