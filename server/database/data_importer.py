@@ -1,7 +1,6 @@
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
-from sqlalchemy.orm import sessionmaker
-from database import Recipe, Ingredient, RecipeIngredient, engine
+from server.database.models import Recipe, Ingredient, RecipeIngredient, engine
 
 def import_data_from_sheets():
     # Load credentials and create connection to Sheets API
