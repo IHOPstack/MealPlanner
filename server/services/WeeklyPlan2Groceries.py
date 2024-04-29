@@ -1,3 +1,4 @@
+from database.schemas import Recipe
 from collections import defaultdict
 
 # Dictionary of where each grocery item might be found in the store
@@ -21,14 +22,13 @@ store_locations = {
     'oil': 'Pantry',
     'salt': 'Pantry'
 }
-def convert_plan_2_groceries(menu):
+def convert_plan_2_groceries(menu: list[Recipe]):
     # Create a new dictionary organized by where items might be found in the store
     store_organized_list = defaultdict(set)
 
     # Iterate over each day in the menu
     for recipe in menu:
         # Iterate over each ingredient in the meal
-        print(recipe.ingredients)
         for ingredient in recipe.ingredients:
             # Get the store location of the ingredient
             location = store_locations.get(ingredient, 'other')
@@ -37,7 +37,7 @@ def convert_plan_2_groceries(menu):
 
     # Print the store_organized_list dictionary
     for location, ingredients in store_organized_list.items():
-        print(f"{location}: {', '.join(ingredients)}")
+        print(f"{location}: {', '.join([ingredient.ingredient.name for ingredient in ingredients])}")
 
     return store_organized_list
 
