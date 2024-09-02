@@ -1,4 +1,4 @@
-from database.schemas import Recipe
+from ..database.schemas import Recipe
 from collections import defaultdict
 
 # Dictionary of where each grocery item might be found in the store

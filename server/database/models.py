@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from database.database import Base
+from .db import Base
 
 class Recipe(Base):
     __tablename__ = 'recipes'

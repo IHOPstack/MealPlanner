@@ -1,4 +1,6 @@
-from database.schemas import Recipe
+from typing import TypeVar
+
+Recipe = TypeVar('Recipe')
 
 def generate_meal_plan(num_meals: int, recipes: list[Recipe], health_preferences: list[str]|None=[None], ingredient_preferences: list[str]|None=[None], must_cook: list[str]|None=[None]) -> list[Recipe]:
     meal_plan = []
@@ -27,3 +29,4 @@ def generate_meal_plan(num_meals: int, recipes: list[Recipe], health_preferences
         dishes_sorted_by_ingredients.remove(dish)
 
     return meal_plan
+
