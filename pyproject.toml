@@ -1,12 +1,18 @@
-[project]
-name = "Jump To Recipe"
+[tool.poetry]
+name = "meal-planner"
 version = "0.1.0"
-description = "Creating meal plans from recipes to reduce groceries and waste"
+description = "Backend for Jump To Recipe web application. Create your own recipes and or add existing recipes to your cookbook. Mindful meal plans can then be generated according to dietary concerns, financial budget, etc"
+authors = ["Devin Beckwith"]
+readme = "README.md"
+packages = [{include = "meal_planner"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+SQLAlchemy = "^2.0.35"
+pydantic = "^2.9.2"
+
 
 [build-system]
-build-backend = "flit_core.buildapi"
-requires = ["flit_core >=3.2,<4"]
-
-[dependencies]
-fastapi
-sqlalchemy
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
