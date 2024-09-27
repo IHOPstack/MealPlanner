@@ -1,12 +1,12 @@
-from database import models
-from database.db import SessionLocal
-from database.schemas import Recipe
-from database.crud import get_recipes
+from meal_planner.database import models
+from meal_planner.database.db import SessionLocal
+from meal_planner.database.schemas import Recipe
+from meal_planner.database.crud import get_recipes
 
 import unittest
 from unittest.mock import patch
 
-from services.Hueristic import generate_meal_plan
+from meal_planner.services.Hueristic import generate_meal_plan
 
 class TestGenerateMealPlan(unittest.TestCase):
     recipes = get_recipes(SessionLocal())
