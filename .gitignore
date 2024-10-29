@@ -2,3 +2,4 @@ server/database/nutritional_data.py
 server/unit_tests.py
 .pytest_cache
 __pycache__
+skeleton_closet.py

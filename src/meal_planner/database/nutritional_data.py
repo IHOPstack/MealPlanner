@@ -1,7 +1,7 @@
 import requests
 
-USDA_API_KEY = 'qlv6dd7EHofWCbRtKjBLZYnlyu8ZlSymszQsgWrg'
-USDA_API_URL = 'https://api.nal.usda.gov/fdc/v1/foods/search'
+from meal_planner.skeleton_closet import USDA_API_KEY
+from meal_planner.skeleton_closet import USDA_API_URL
 
 def get_ingredient_data(ingredient_name):
     params = {
